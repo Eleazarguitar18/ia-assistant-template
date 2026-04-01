@@ -4,14 +4,21 @@ import { MailService } from './mail.service';
 
 describe('MailController', () => {
   let controller: MailController;
+  let service: MailService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MailController],
-      providers: [MailService],
+      providers: [
+        {
+          provide: MailService,
+          useValue: { enviarCorreo: jest.fn() },
+        },
+      ],
     }).compile();
 
     controller = module.get<MailController>(MailController);
+    service = module.get<MailService>(MailService);
   });
 
   it('should be defined', () => {

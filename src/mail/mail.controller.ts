@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { CreateMailDto } from './dto/create-mail.dto';
-import { Public } from 'src/auth/decorators/auth_public.decorator';
+import { Public } from '../auth/decorators/auth_public.decorator';
 
 @Controller('mail')
 export class MailController {
