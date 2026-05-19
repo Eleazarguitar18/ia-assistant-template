@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { InventarioService } from './inventario.service';
 import { CrearCategoriaDto } from './dto/crear-categoria.dto';
 import { ActualizarCategoriaDto } from './dto/actualizar-categoria.dto';
@@ -30,7 +38,12 @@ export class CategoriasController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar una categoría' })
-  update(@Param('id') id: string, @Body() actualizarCategoriaDto: ActualizarCategoriaDto) {
+  update(
+    @Param('id') id: string,
+    @Body() actualizarCategoriaDto: ActualizarCategoriaDto,
+  ) {
+    console.log(actualizarCategoriaDto);
+
     return this.inventarioService.updateCategoria(+id, actualizarCategoriaDto);
   }
 

@@ -19,12 +19,14 @@ export class InventarioService {
 
   async create(crearProductoDto: CrearProductoDto): Promise<Producto> {
     const { id_categoria, ...productoData } = crearProductoDto;
-    
-    const categoria = await this.categoriaRepository.findOne({ 
-      where: { id: id_categoria, estado: true } 
+
+    const categoria = await this.categoriaRepository.findOne({
+      where: { id: id_categoria, estado: true },
     });
     if (!categoria) {
-      throw new NotFoundException(`Categoría con id ${id_categoria} no encontrada o inactiva`);
+      throw new NotFoundException(
+        `Categoría con id ${id_categoria} no encontrada o inactiva`,
+      );
     }
 
     const producto = this.productoRepository.create({
@@ -47,32 +49,41 @@ export class InventarioService {
       where: { id, estado: true },
       relations: ['categoria'],
     });
-    
+
     if (!producto) {
-      throw new NotFoundException(`Producto con id ${id} no encontrado o inactivo`);
+      throw new NotFoundException(
+        `Producto con id ${id} no encontrado o inactivo`,
+      );
     }
-    
+
     return producto;
   }
 
-  async update(id: number, actualizarProductoDto: ActualizarProductoDto): Promise<Producto> {
+  async update(
+    id: number,
+    actualizarProductoDto: ActualizarProductoDto,
+  ): Promise<Producto> {
     const { id_categoria, ...updateData } = actualizarProductoDto;
-    
+
     const producto = await this.productoRepository.preload({
       id,
       ...updateData,
     });
 
     if (!producto || !producto.estado) {
-      throw new NotFoundException(`Producto con id ${id} no encontrado o inactivo`);
+      throw new NotFoundException(
+        `Producto con id ${id} no encontrado o inactivo`,
+      );
     }
 
     if (id_categoria) {
-      const categoria = await this.categoriaRepository.findOne({ 
-        where: { id: id_categoria, estado: true } 
+      const categoria = await this.categoriaRepository.findOne({
+        where: { id: id_categoria, estado: true },
       });
       if (!categoria) {
-        throw new NotFoundException(`Categoría con id ${id_categoria} no encontrada o inactiva`);
+        throw new NotFoundException(
+          `Categoría con id ${id_categoria} no encontrada o inactiva`,
+        );
       }
       producto.categoria = categoria;
     }
@@ -89,35 +100,44 @@ export class InventarioService {
 
   // --- MÉTODOS PARA CATEGORÍAS ---
 
-  async createCategoria(crearCategoriaDto: CrearCategoriaDto): Promise<Categoria> {
+  async createCategoria(
+    crearCategoriaDto: CrearCategoriaDto,
+  ): Promise<Categoria> {
     const nuevaCategoria = this.categoriaRepository.create(crearCategoriaDto);
     return await this.categoriaRepository.save(nuevaCategoria);
   }
 
   async findAllCategorias(): Promise<Categoria[]> {
     return await this.categoriaRepository.find({
-      where: { estado: true }
+      where: { estado: true },
     });
   }
 
   async findOneCategoria(id: number): Promise<Categoria> {
-    const categoria = await this.categoriaRepository.findOne({ 
-      where: { id, estado: true } 
+    const categoria = await this.categoriaRepository.findOne({
+      where: { id, estado: true },
     });
     if (!categoria) {
-      throw new NotFoundException(`Categoría con id ${id} no encontrada o inactiva`);
+      throw new NotFoundException(
+        `Categoría con id ${id} no encontrada o inactiva`,
+      );
     }
     return categoria;
   }
 
-  async updateCategoria(id: number, actualizarCategoriaDto: ActualizarCategoriaDto): Promise<Categoria> {
+  async updateCategoria(
+    id: number,
+    actualizarCategoriaDto: ActualizarCategoriaDto,
+  ): Promise<Categoria> {
     const categoria = await this.categoriaRepository.preload({
       id,
       ...actualizarCategoriaDto,
     });
 
-    if (!categoria || !categoria.estado) {
-      throw new NotFoundException(`Categoría con id ${id} no encontrada o inactiva`);
+    if (!categoria) {
+      throw new NotFoundException(
+        `Categoría con id ${id} no encontrada o inactiva`,
+      );
     }
 
     return await this.categoriaRepository.save(categoria);
