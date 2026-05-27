@@ -7,7 +7,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { InventarioService } from '../inventario.service';
+import { CategoriaService } from './categoria.service';
 import { CrearCategoriaDto } from '../dto/crear-categoria.dto';
 import { ActualizarCategoriaDto } from '../dto/actualizar-categoria.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
@@ -16,24 +16,24 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiTags('inventario/categorias')
 @Controller('inventario/categorias')
 export class CategoriasController {
-  constructor(private readonly inventarioService: InventarioService) { }
+  constructor(private readonly categoriaService: CategoriaService) { }
 
   @Post()
   @ApiOperation({ summary: 'Crear una nueva categoría' })
   create(@Body() crearCategoriaDto: CrearCategoriaDto) {
-    return this.inventarioService.createCategoria(crearCategoriaDto);
+    return this.categoriaService.createCategoria(crearCategoriaDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Listar todas las categorías' })
   findAll() {
-    return this.inventarioService.findAllCategorias();
+    return this.categoriaService.findAllCategorias();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una categoría por ID' })
   findOne(@Param('id') id: string) {
-    return this.inventarioService.findOneCategoria(+id);
+    return this.categoriaService.findOneCategoria(+id);
   }
 
   @Patch(':id')
@@ -44,12 +44,12 @@ export class CategoriasController {
   ) {
     console.log(actualizarCategoriaDto);
 
-    return this.inventarioService.updateCategoria(+id, actualizarCategoriaDto);
+    return this.categoriaService.updateCategoria(+id, actualizarCategoriaDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Eliminar una categoría' })
   remove(@Param('id') id: string) {
-    return this.inventarioService.removeCategoria(+id);
+    return this.categoriaService.removeCategoria(+id);
   }
 }

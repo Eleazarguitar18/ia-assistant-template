@@ -21,6 +21,7 @@ export class CategoriaService {
         const nuevaCategoria = this.categoriaRepository.create(crearCategoriaDto);
         const categoria = await this.categoriaRepository.save(nuevaCategoria);
         if (categoria) {
+            console.log('Categoría creada:', categoria);
             this.appGateway.notifyDataChange('category', 'creado');
         }
         return categoria;

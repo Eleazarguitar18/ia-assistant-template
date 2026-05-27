@@ -10,33 +10,33 @@ import { ApiBearerAuth, ApiTags, ApiOperation } from '@nestjs/swagger';
 export class InventarioController {
   constructor(private readonly inventarioService: InventarioService) { }
 
-  @Post()
-  @ApiOperation({ summary: 'Crear un nuevo producto en inventario' })
-  create(@Body() crearProductoDto: CrearProductoDto) {
-    return this.inventarioService.create(crearProductoDto);
-  }
+  // @Post()
+  // @ApiOperation({ summary: 'Crear un nuevo producto en inventario' })
+  // create(@Body() crearProductoDto: CrearProductoDto) {
+  //   return this.inventarioService.create(crearProductoDto);
+  // }
 
-  @Get()
-  @ApiOperation({ summary: 'Listar todos los productos del inventario' })
-  findAll() {
-    return this.inventarioService.findAll();
-  }
+  // @Get()
+  // @ApiOperation({ summary: 'Listar todos los productos del inventario' })
+  // findAll() {
+  //   return this.inventarioService.findAll();
+  // }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Obtener un producto por ID' })
-  findOne(@Param('id') id: string) {
-    return this.inventarioService.findOne(+id);
-  }
+  // @Get(':id')
+  // @ApiOperation({ summary: 'Obtener un producto por ID' })
+  // findOne(@Param('id') id: string) {
+  //   return this.inventarioService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar un producto del inventario' })
-  update(@Param('id') id: string, @Body() actualizarProductoDto: ActualizarProductoDto) {
-    return this.inventarioService.update(+id, actualizarProductoDto);
-  }
+  // @Patch(':id')
+  // @ApiOperation({ summary: 'Actualizar un producto del inventario' })
+  // update(@Param('id') id: string, @Body() actualizarProductoDto: ActualizarProductoDto) {
+  //   return this.inventarioService.update(+id, actualizarProductoDto);
+  // }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Eliminar un producto del inventario' })
-  remove(@Param('id') id: string) {
-    return this.inventarioService.remove(+id);
-  }
+  // @Delete(':id')
+  // @ApiOperation({ summary: 'Eliminar un producto del inventario' })
+  // remove(@Param('id') id: string) {
+  //   return this.inventarioService.remove(+id);
+  // }
 }

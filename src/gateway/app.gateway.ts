@@ -5,8 +5,6 @@ import { Server, Socket } from 'socket.io';
 export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
 
-
-
     handleConnection(client: Socket) {
         console.log('Cliente conectado:', client.id);
     }
@@ -17,6 +15,7 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // Método para emitir a todos
     notifyDataChange(entity: string, action: string) {
+        console.log(`📡 Emitiendo evento: ${entity} - ${action}`); // <-- DEBUG
         this.server.emit('dataChanged', { entity, action });
     }
 }
