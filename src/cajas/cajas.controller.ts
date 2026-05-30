@@ -31,6 +31,12 @@ export class CajasController {
     return this.cajasService.findCaja(+id);
   }
 
+  @Get('sesion-activa/:idUsuario')
+  @ApiOperation({ summary: 'Obtener la sesión de caja activa de un usuario' })
+  findSesionActivaUsuario(@Param('idUsuario') idUsuario: string) {
+    return this.cajasService.findSesionActivaUsuario(+idUsuario);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar datos de una caja' })
   updateCaja(@Param('id') id: string, @Body() updateCajaDto: UpdateCajaDto) {

@@ -70,6 +70,13 @@ export class CajasService {
     return this.sesionCajaRepository.save(sesion);
   }
 
+  async findSesionActivaUsuario(idUsuario: number): Promise<SesionCaja | null> {
+    return this.sesionCajaRepository.findOne({
+      where: { id_usuario: idUsuario, estado_sesion: 'ABIERTA', estado: true },
+      relations: ['caja']
+    });
+  }
+
   async cerrarCaja(idSesion: number, cerrarCajaDto: CerrarCajaDto): Promise<SesionCaja> {
     const { id_user_update } = cerrarCajaDto;
     const sesion = await this.sesionCajaRepository.findOneBy({ id: idSesion, estado: true });
