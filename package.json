@@ -1,7 +1,7 @@
 {
-  "name": "backend_rutea",
+  "name": "kantuta-pos-backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "Backend de Kantuta POS",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

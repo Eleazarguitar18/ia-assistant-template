@@ -154,6 +154,47 @@ export class CajasService {
     return this.movimientoCajaRepository.save(movimiento);
   }
 
+  async getSesionActivaUsuario(id_usuario: number): Promise<SesionCaja> {
+    const sesion = await this.sesionCajaRepository.findOne({
+      where: { id_usuario, estado_sesion: 'ABIERTA', estado: true },
+    });
+    if (!sesion) {
+      throw new NotFoundException(`No hay sesión activa para el usuario ${id_usuario}`);
+    }
+    return sesion;
+  }
+
+  async getSesionBalance(idSesion: number): Promise<any> {
+    const sesion = await this.sesionCajaRepository.findOneBy({
+      id: idSesion,
+      estado: true,
+    });
+    if (!sesion) {
+      throw new NotFoundException(`Sesión con ID ${idSesion} no encontrada o inactiva`);
+    }
+
+    const movimientos = await this.movimientoCajaRepository.find({
+      where: { id_sesion_caja: idSesion, estado: true },
+    });
+
+    let totalIngresos = 0;
+    let totalEgresos = 0;
+
+    for (const mov of movimientos) {
+      if (mov.tipo === 'INGRESO') totalIngresos += Number(mov.monto);
+      else if (mov.tipo === 'EGRESO') totalEgresos += Number(mov.monto);
+    }
+
+    const monto_final_teorico = Number(sesion.monto_inicial) + totalIngresos - totalEgresos;
+
+    return {
+      monto_inicial: Number(sesion.monto_inicial),
+      ingresos: totalIngresos,
+      egresos: totalEgresos,
+      monto_final_teorico,
+    };
+  }
+
   async softDeleteCaja(id: number, id_user_update: number): Promise<void> {
     const caja = await this.findCaja(id);
     caja.estado = false;

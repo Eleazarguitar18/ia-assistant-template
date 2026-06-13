@@ -29,6 +29,16 @@ export class CajasController {
     return this.cajasService.create(createCajaDto);
   }
 
+  @Get('sesion-activa/:id_usuario')
+  getSesionActivaUsuario(@Param('id_usuario') id_usuario: string) {
+    return this.cajasService.getSesionActivaUsuario(+id_usuario);
+  }
+
+  @Get('sesion/:id/balance')
+  getSesionBalance(@Param('id') id: string) {
+    return this.cajasService.getSesionBalance(+id);
+  }
+
   @Get(':id')
   findCaja(@Param('id') id: string) {
     return this.cajasService.findCaja(+id);

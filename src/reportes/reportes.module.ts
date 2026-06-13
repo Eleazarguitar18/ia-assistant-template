@@ -4,14 +4,14 @@ import { ReportesService } from './services/reportes.service';
 import { ReportesController } from './controllers/reportes.controller';
 import { Venta } from 'src/ventas/entities/venta.entity';
 import { Producto } from 'src/inventario/entities/producto.entity';
-import { RecargaTransaccion } from 'src/recargas/entities/recarga-transaccion.entity';
+import { RecargaCliente } from 'src/recargas/entities/recarga-cliente.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Venta,
       Producto,
-      RecargaTransaccion,
+      RecargaCliente,
     ]),
   ],
   controllers: [ReportesController],

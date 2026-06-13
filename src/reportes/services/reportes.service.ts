@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, LessThanOrEqual } from 'typeorm';
 import { Venta } from 'src/ventas/entities/venta.entity';
 import { Producto } from 'src/inventario/entities/producto.entity';
-import { RecargaTransaccion } from 'src/recargas/entities/recarga-transaccion.entity';
+import { RecargaCliente } from 'src/recargas/entities/recarga-cliente.entity';
 
 @Injectable()
 export class ReportesService {
@@ -12,8 +12,8 @@ export class ReportesService {
     private readonly ventaRepository: Repository<Venta>,
     @InjectRepository(Producto)
     private readonly productoRepository: Repository<Producto>,
-    @InjectRepository(RecargaTransaccion)
-    private readonly recargaTransaccionRepository: Repository<RecargaTransaccion>,
+    @InjectRepository(RecargaCliente)
+    private readonly recargaClienteRepository: Repository<RecargaCliente>,
   ) {}
 
   async getDashboardStats(anio: number) {
@@ -71,30 +71,19 @@ export class ReportesService {
     const ventasHoy = Number(ventasHoyResult?.total || 0);
 
     // B. Total de recargas hoy (monto total vendido)
-    const recargasHoyResult = await this.recargaTransaccionRepository
+    const recargasHoyResult = await this.recargaClienteRepository
       .createQueryBuilder('rt')
       .select('SUM(rt.monto)', 'total')
-      .where('rt.fecha BETWEEN :start AND :end', {
+      .where('rt.fecha_hora BETWEEN :start AND :end', {
         start: startOfToday,
         end: endOfToday,
       })
-      .andWhere("rt.tipo_operacion = 'VENTA_RECARGA'")
       .andWhere('rt.estado = true')
       .getRawOne();
     const recargasHoy = Number(recargasHoyResult?.total || 0);
 
-    // C. Ganancia por comisiones hoy (comision_monto acumulado en compras de saldo)
-    const comisionesHoyResult = await this.recargaTransaccionRepository
-      .createQueryBuilder('rt')
-      .select('SUM(rt.comision_monto)', 'total')
-      .where('rt.fecha BETWEEN :start AND :end', {
-        start: startOfToday,
-        end: endOfToday,
-      })
-      .andWhere("rt.tipo_operacion = 'COMPRA_SALDO'")
-      .andWhere('rt.estado = true')
-      .getRawOne();
-    const comisionesHoy = Number(comisionesHoyResult?.total || 0);
+    // C. Ganancia por comisiones hoy (desactivado temporalmente)
+    const comisionesHoy = 0;
 
     // D. Cantidad de productos con stock bajo (stock_actual <= stock_minimo)
     const productosStockBajoCount = await this.productoRepository
@@ -173,18 +162,16 @@ export class ReportesService {
     }));
 
     // --- 4. Rendimiento/Distribución de Recargas del mes actual ---
-    const recargasDistribucionRaw = await this.recargaTransaccionRepository
+    const recargasDistribucionRaw = await this.recargaClienteRepository
       .createQueryBuilder('rt')
-      .innerJoin('rt.proveedor', 'prov')
-      .select('prov.nombre', 'proveedor')
+      .select('rt.operadora', 'proveedor')
       .addSelect('SUM(rt.monto)', 'total')
-      .where('rt.fecha BETWEEN :start AND :end', {
+      .where('rt.fecha_hora BETWEEN :start AND :end', {
         start: startOfMonth,
         end: endOfMonth,
       })
-      .andWhere("rt.tipo_operacion = 'VENTA_RECARGA'")
       .andWhere('rt.estado = true')
-      .groupBy('prov.nombre')
+      .groupBy('rt.operadora')
       .getRawMany();
 
     const recargasDistribucion = recargasDistribucionRaw.map((item) => ({
