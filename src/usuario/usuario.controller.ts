@@ -37,7 +37,13 @@ export class UsuarioController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.usuarioService.findOne(+id);
+    const data = await this.usuarioService.findOne(+id);
+    const respuesta = {
+      status: 200,
+      message: 'Usuario encontrado!',
+      data: data,
+    };
+    return respuesta;
   }
 
   @Patch(':id')

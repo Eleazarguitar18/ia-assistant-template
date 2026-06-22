@@ -29,6 +29,8 @@ export class CreateAuthDto {
   @IsString()
   @IsNotEmpty()
   genero: string;
-  // @IsOptional()
+  @IsOptional()
   // persona?: Persona;
+  @IsOptional()
+  id_role?: number;
 }

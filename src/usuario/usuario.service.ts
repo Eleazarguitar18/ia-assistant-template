@@ -58,6 +58,9 @@ export class UsuarioService {
       password: password_hash,
       estado: true,
       persona: persona,
+      role: createAuthDto.id_role
+        ? ({ id: createAuthDto.id_role } as any)
+        : undefined,
     };
 
     const user = this.userRepository.create(userDto);
@@ -84,7 +87,10 @@ export class UsuarioService {
   }
 
   findOne(id: number) {
-    const data = this.userRepository.findOneBy({ id: id });
+    const data = this.userRepository.findOne({
+      where: { id: id },
+      relations: ['persona', 'role'],
+    });
     if (!data) {
       throw new NotFoundException(`No existen datos de usuario`);
     }
@@ -93,7 +99,12 @@ export class UsuarioService {
 
   // updates
   update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    const data = this.userRepository.update(id, updateUsuarioDto);
+    const dataToUpdate: any = { ...updateUsuarioDto };
+    if (updateUsuarioDto.id_role) {
+      dataToUpdate.role = { id: updateUsuarioDto.id_role };
+      delete dataToUpdate.id_role;
+    }
+    const data = this.userRepository.update(id, dataToUpdate);
 
     return data;
   }

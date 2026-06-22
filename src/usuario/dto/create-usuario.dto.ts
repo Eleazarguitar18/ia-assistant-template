@@ -21,4 +21,7 @@ export class CreateUsuarioDto {
 
   @IsOptional()
   persona?: Persona;
+  
+  @IsOptional()
+  id_role?: number;
 }

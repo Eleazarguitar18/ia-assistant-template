@@ -17,137 +17,83 @@ export class ReportesController {
     return this.reportesService.getDashboardStats(isNaN(filterYear) ? currentYear : filterYear);
   }
 
-  @Get('pdf/movimientos-caja/:idSesion')
-  @ApiOperation({ summary: 'Generar reporte PDF de movimientos de una sesión de caja' })
-  async getMovimientosCajaPdf(
+  @Get('data/movimientos-caja/:idSesion')
+  @ApiOperation({ summary: 'Obtener datos de movimientos de una sesión de caja para PDF' })
+  async getMovimientosCajaData(
     @Param('idSesion', ParseIntPipe) idSesion: number,
-    @Res() res: Response,
   ) {
-    const pdfBuffer = await this.reportesService.getMovimientosCajaPdf(idSesion);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=movimientos-caja-${idSesion}.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getMovimientosCajaData(idSesion);
   }
 
-  @Get('pdf/ventas-rango')
-  @ApiOperation({ summary: 'Generar reporte PDF de ventas por rango de fechas' })
+  @Get('data/ventas-rango')
+  @ApiOperation({ summary: 'Obtener datos JSON de ventas por rango de fechas para reporte' })
   @ApiQuery({ name: 'fechaInicio', required: true })
   @ApiQuery({ name: 'fechaFin', required: true })
   @ApiQuery({ name: 'auditor', required: true })
-  async getVentasRangoPdf(
+  async getVentasRangoData(
     @Query('fechaInicio') fechaInicio: string,
     @Query('fechaFin') fechaFin: string,
     @Query('auditor') auditor: string,
-    @Res() res: Response,
   ) {
-    const pdfBuffer = await this.reportesService.getVentasRangoPdf(fechaInicio, fechaFin, auditor);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=ventas-rango.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getVentasRangoData(fechaInicio, fechaFin, auditor);
   }
 
-  @Get('pdf/productividad-operador')
-  @ApiOperation({ summary: 'Generar reporte PDF de productividad por operador' })
+  @Get('data/productividad-operador')
+  @ApiOperation({ summary: 'Obtener datos de productividad por operador para PDF' })
   @ApiQuery({ name: 'fechaInicio', required: true })
   @ApiQuery({ name: 'fechaFin', required: true })
-  async getProductividadOperadorPdf(
+  @ApiQuery({ name: 'operadorId', required: false })
+  async getProductividadOperadorData(
     @Query('fechaInicio') fechaInicio: string,
     @Query('fechaFin') fechaFin: string,
-    @Res() res: Response,
+    @Query('operadorId') operadorId?: string,
   ) {
-    const pdfBuffer = await this.reportesService.getProductividadOperadorPdf(fechaInicio, fechaFin);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=productividad-operador.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getProductividadOperadorData(fechaInicio, fechaFin, operadorId ? parseInt(operadorId, 10) : undefined);
   }
 
-  @Get('pdf/compras-rango')
-  @ApiOperation({ summary: 'Generar reporte PDF de compras por rango de fechas' })
+  @Get('data/compras-rango')
+  @ApiOperation({ summary: 'Obtener datos de compras por rango para PDF' })
   @ApiQuery({ name: 'fechaInicio', required: true })
   @ApiQuery({ name: 'fechaFin', required: true })
   @ApiQuery({ name: 'auditor', required: true })
-  async getComprasRangoPdf(
+  async getComprasRangoData(
     @Query('fechaInicio') fechaInicio: string,
     @Query('fechaFin') fechaFin: string,
     @Query('auditor') auditor: string,
-    @Res() res: Response,
   ) {
-    const pdfBuffer = await this.reportesService.getComprasRangoPdf(fechaInicio, fechaFin, auditor);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=compras-rango.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getComprasRangoData(fechaInicio, fechaFin, auditor);
   }
 
-  @Get('pdf/inventario')
-  @ApiOperation({ summary: 'Generar reporte PDF de inventario actual' })
+  @Get('data/inventario')
+  @ApiOperation({ summary: 'Obtener datos JSON de inventario actual para reporte' })
   @ApiQuery({ name: 'auditor', required: true })
-  async getInventarioPdf(
+  async getInventarioData(
     @Query('auditor') auditor: string,
-    @Res() res: Response,
   ) {
-    const pdfBuffer = await this.reportesService.getInventarioPdf(auditor);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=inventario-actual.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getInventarioData(auditor);
   }
 
-  @Get('pdf/venta/:id')
-  @ApiOperation({ summary: 'Generar recibo en PDF de una venta específica' })
-  async getVentaReciboPdf(
+  @Get('data/venta/:id')
+  @ApiOperation({ summary: 'Obtener datos de recibo de venta para PDF' })
+  async getVentaReciboData(
     @Param('id', ParseIntPipe) id: number,
-    @Res() res: Response,
   ) {
-    const pdfBuffer = await this.reportesService.getVentaReciboPdf(id);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=ticket-venta-${id}.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getVentaReciboData(id);
   }
 
-  @Get('pdf/producto/:id')
-  @ApiOperation({ summary: 'Generar ficha en PDF de un producto específico' })
-  async getProductoFichaPdf(
+  @Get('data/producto/:id')
+  @ApiOperation({ summary: 'Obtener datos de ficha de producto para PDF' })
+  async getProductoFichaData(
     @Param('id', ParseIntPipe) id: number,
-    @Res() res: Response,
   ) {
-    const pdfBuffer = await this.reportesService.getProductoFichaPdf(id);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=ficha-producto-${id}.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getProductoFichaData(id);
   }
 
-  @Get('pdf/caja-historial/:id')
-  @ApiOperation({ summary: 'Generar extracto histórico en PDF de una caja específica' })
-  async getCajaHistorialPdf(
+  @Get('data/caja-historial/:id')
+  @ApiOperation({ summary: 'Obtener datos de extracto histórico de caja para PDF' })
+  async getCajaHistorialData(
     @Param('id', ParseIntPipe) id: number,
-    @Res() res: Response,
   ) {
-    const pdfBuffer = await this.reportesService.getCajaHistorialPdf(id);
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=extracto-caja-${id}.pdf`,
-      'Content-Length': pdfBuffer.length,
-    });
-    res.end(pdfBuffer);
+    return this.reportesService.getCajaHistorialData(id);
   }
 }

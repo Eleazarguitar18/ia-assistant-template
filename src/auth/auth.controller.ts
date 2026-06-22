@@ -76,6 +76,25 @@ export class AuthController {
   }
 
   @ApiBearerAuth()
+  @Post('change-password')
+  @ApiOperation({ summary: 'Cambiar contraseña de un usuario' })
+  async changePassword(
+    @Body() changeDto: { email: string; newPassword: string },
+  ) {
+    return this.authService.changePassword(
+      changeDto.email,
+      changeDto.newPassword,
+    );
+  }
+
+  @ApiBearerAuth()
+  @Get('roles/list')
+  @ApiOperation({ summary: 'Obtener todos los roles' })
+  findAllRoles() {
+    return this.authService.findAllroles();
+  }
+
+  @ApiBearerAuth()
   @Get()
   @ApiOperation({ summary: 'Listar todos los usuarios (requiere autenticación)' })
   findAll() {
